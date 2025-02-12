@@ -17,7 +17,7 @@
 
 ### Docs
 
-- update CHANGELOG-GitHub.md ([138952c](https://github.com///commit/138952c5ae46b7a9471f354a68e81f04c125c7af))
+- update CHANGELOG-GitHub.md ([e4f4fc5](https://github.com///commit/e4f4fc5dad5c57d1e5aa206ff79ef56b08ce932c))
 - add the faiss library to the project locally. ([b34f09a](https://github.com///commit/b34f09a909ecb6f09817b221606493900fad26f8))
 - add the configration file for adding CHANGELOG-GitHub.md ([7a00651](https://github.com///commit/7a00651fe7a338605c5f1fc57848e551ef316ab4))
 
