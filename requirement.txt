@@ -1,0 +1,5 @@
+faiss-cpu==1.10.0
+git-changelog==2.5.3
+numpy==2.2.2
+pandas==2.2.3
+streamlit==1.42.0
