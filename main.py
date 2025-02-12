@@ -1,5 +1,7 @@
 from numpy import random, ndarray
+from streamlit import title, divider, altair_chart
 
+from utilities.charts import chart_points, compute_heatmap_data, generate_heatmap
 from utilities.tools import (faiss_index_creator,
                              faiss_index_adder,
                              faiss_index_search,
@@ -11,6 +13,9 @@ from utilities.tools import (faiss_index_creator,
 
 def main():
     """ streamlit run main.py """
+    title("FAISS Index Demo")
+    divider()
+
     dimensions: int = 256
 
     # create an empty index, which cannot be stored in parquet format
@@ -48,6 +53,9 @@ def main():
     # Load the index from the storage
     index_new = faiss_index_loader(file_name)
     print(f"Index size after loading: {index_new.ntotal}")
+
+    chart = chart_points(query, index, top_n)
+    altair_chart(chart, use_container_width=True)
 
 
 if __name__ == "__main__":
