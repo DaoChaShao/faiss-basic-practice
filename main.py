@@ -1,61 +1,65 @@
+from faiss import IndexFlatL2, IndexIVFFlat, METRIC_L2
 from numpy import random, ndarray
-from streamlit import title, divider, altair_chart
 
-from utilities.charts import chart_points
-from utilities.tools import (faiss_index_creator,
+from utilities.tools import (SeedNP,
+                             faiss_index_creator,
                              faiss_index_adder,
                              faiss_index_search,
-                             faiss_index_remover,
-                             faiss_index_storager,
-                             faiss_index_dropper,
-                             faiss_index_loader)
+                             Timer, )
 
 
 def main():
     """ streamlit run main.py """
-    title("FAISS Index Demo")
-    divider()
-
     dimensions: int = 256
+    amount_data: int = 1_000_000
+    amount_query: int = 1
+    top_n: int = 3
+    nlist: int = 100
+    probe: int = 50
 
     # create an empty index, which cannot be stored in parquet format
     index = faiss_index_creator(dimensions)
 
-    # add some data to the index
-    amount: int = 15
-    faiss_index_adder(index, amount, dimensions)
-    print(f"Index size: {index.ntotal}")
+    with SeedNP(seed=9527):
+        # add some data to the index
+        faiss_index_adder(index, amount_data, dimensions)
+        print(f"Index size: {index.ntotal}")
 
-    # Give a random query vector
-    amount: int = 1
-    query: ndarray = random.rand(amount, dimensions).astype("float32")
-    print(f"Query shape: {query.shape}")
+        # Give a random query vector
+        query: ndarray = random.rand(amount_query, dimensions).astype("float32")
+        print(f"Query shape: {query.shape}")
 
-    # Search for the top n nearest neighbors
-    top_n: int = 3
-    dis, idx = faiss_index_search(index, query, top_n)
-    print(f"Top {top_n} distances(similarities): {dis}")
-    print(f"Top {top_n} indices(position in the index): {idx}")
+        # Search for the top n nearest neighbors
+        with Timer(description="Brute-Force Search") as timer:
+            dis, idx = faiss_index_search(index, query, top_n)
+            # Print the results
+            print(f"Top {top_n} distances(similarities): {dis}")
+            print(f"Top {top_n} indices(position in the index): {idx}")
+        print(timer)
 
-    # Delete vectors from the index
-    ids: list[int] = [1, 2, 3]
-    faiss_index_remover(index, ids)
-    print(f"Index size after deletion: {index.ntotal}")
+        # Generate random vectors
+        vector_ivf = random.rand(amount_data, dimensions).astype("float32")
 
-    # Storage the index
-    file_name: str = "index"
-    faiss_index_storager(index, file_name)
+        # Initialize the quantizer and the index
+        quantizer = IndexFlatL2(dimensions)
 
-    # Drop the whole index
-    faiss_index_dropper(index)
-    print(f"Index size after dropping: {index.ntotal}")
+        index_ivf = IndexIVFFlat(quantizer, dimensions, nlist, METRIC_L2)
+        index_ivf.nprobe = probe
 
-    # Load the index from the storage
-    index_new = faiss_index_loader(file_name)
-    print(f"Index size after loading: {index_new.ntotal}")
+        # Train and add vectors to the index
+        assert not index_ivf.is_trained
+        index_ivf.train(vector_ivf)
+        assert index_ivf.is_trained
 
-    # chart = chart_points(query, index, top_n)
-    # altair_chart(chart, use_container_width=True)
+        faiss_index_adder(index_ivf, amount_data, dimensions)
+
+        # Perform search
+        with Timer(description="IVF Search") as timer:
+            d, i = faiss_index_search(index_ivf, query, top_n)
+            # Print the results
+            print(f"Top {top_n} distances(similarities): {d}")
+            print(f"Top {top_n} indices(position in the index): {i}")
+        print(timer)
 
 
 if __name__ == "__main__":
