@@ -13,7 +13,8 @@
 
 ### Chore
 
-- modify something that is less important. ([c8fd1b2](https://github.com/DaoChaShao/faiss-basic-practice/commit/c8fd1b27fc2e270e6a590782adcae06638df185f))
+- rename the file to requirements.txt ([81a2f19](https://github.com/DaoChaShao/faiss-basic-practice/commit/81a2f199468e67fa97a4a90323c88cd268a777be))
+- modify something that is less important. ([36120ac](https://github.com/DaoChaShao/faiss-basic-practice/commit/36120acb51e275fcd342329a02814dfdaa5fb434))
 - delete some functions that have been existed. ([5e4673f](https://github.com/DaoChaShao/faiss-basic-practice/commit/5e4673fffa6966c3a0097414d5f8c7c02bd7fe0d))
 - update index.faiss ([0c26ca3](https://github.com/DaoChaShao/faiss-basic-practice/commit/0c26ca35ebfcdb096eb8d507956faf7231eeb28b))
 - add the ignore file ([13cf1ac](https://github.com/DaoChaShao/faiss-basic-practice/commit/13cf1ac0f42003dd110336a53347ce6916e8c85f))
