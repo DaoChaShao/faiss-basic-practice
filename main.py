@@ -1,7 +1,7 @@
 from numpy import random, ndarray
 from streamlit import title, divider, altair_chart
 
-from utilities.charts import chart_points, compute_heatmap_data, generate_heatmap
+from utilities.charts import chart_points
 from utilities.tools import (faiss_index_creator,
                              faiss_index_adder,
                              faiss_index_search,
@@ -54,8 +54,8 @@ def main():
     index_new = faiss_index_loader(file_name)
     print(f"Index size after loading: {index_new.ntotal}")
 
-    chart = chart_points(query, index, top_n)
-    altair_chart(chart, use_container_width=True)
+    # chart = chart_points(query, index, top_n)
+    # altair_chart(chart, use_container_width=True)
 
 
 if __name__ == "__main__":
