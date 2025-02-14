@@ -1,6 +1,7 @@
 from numpy import random, ndarray, array
 import faiss
 
+
 def faiss_index_creator(dimension: int, method: str = "Flat") -> faiss.Index:
     """ Creates a Faiss index based on the given dimension and method. """
     index = faiss.index_factory(dimension, method, faiss.METRIC_L2)
